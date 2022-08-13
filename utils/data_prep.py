@@ -43,7 +43,7 @@ class TB_model:
                             number of orbitals per unit cell considered in the model
             num_point   :   (int)
                             number of interacting neighbor cells for each unit cell
-        Outputs:
+        Output:
             (3-layer nested dict)
         '''
         H_size = num_basis ** 2
@@ -65,7 +65,7 @@ class TB_model:
         Evaluate every element in each line
         Arguments:
             lines   :   (list of str)
-        Outputs:
+        Output:
             (2-layer nested list)
         '''
         return [[eval(value)for value in line.split()] for line in lines]
@@ -100,7 +100,7 @@ class TB_model:
                             number of orbitals per unit cell considered in the model
             num_point   :   (int)
                             number of interacting neighbor cells for each unit cell
-        Outputs:
+        Output:
             (TB_model)
         '''
         structure = Structure.from_str(cif, fmt = 'cif')
@@ -116,7 +116,7 @@ class TB_model:
                             path to the cif file containing lattice structure data
             hr_file     :   (str)
                             path to the dat file containing tight-binding Hamiltonian data
-        Outputs:
+        Output:
             (TB_model)
         '''
         with open(cif_file, 'r', encoding='utf-8') as f:
@@ -135,7 +135,7 @@ class TB_model:
                             path to the folder containing data files
                             1. cif file containing material lattice structure data
                             2. dat filr containing tight-binding Hamiltonian data
-        Outputs:
+        Output:
             (TB_model)
         '''
         cif_file = glob(data_folder + '/*.cif')[0]
@@ -149,7 +149,7 @@ class TB_model:
         Arguments:
             folder  :   (str)
                         path to the folder containing data folders
-        Outputs:
+        Output:
             (dict)  :   material (str) -> TB_model
         '''
         data_folders = glob(folder + '/*/')
@@ -159,7 +159,7 @@ class TB_model:
     def __repr__(self):
         '''
         Class representation
-        Outputs:
+        Output:
             (str)   :   With following informations,
                         1. Number of orbitals per unit cell considered in the model
                         2. Number of interacting neighbor cells for each unit cell
