@@ -2,6 +2,9 @@
 # helper file for building the specimens for simulations
 #########################################################
 
+from platform import platform
+import kwant
+
 def create_platform(model, shape, center, dim):
     '''
     Create plain kwant object with specific shape, model.structure.lattice parameters,
@@ -18,9 +21,20 @@ def create_platform(model, shape, center, dim):
     Output:
         (kwant)
     '''
-    return
+    lattice = kwant.lattice.Monatomic(model.structure.lattice.matrix[:2, :2])
+    sym = kwant.lattice.TranslationalSymmetry(lattice.vec((1, 0)), lattice.vec((0, 1)))
+    platform = kwant.Builder()
+    platform[lattice.shape(shape, center)] = model.H[0][0][0]
+    for nx, Hx in model.H.items():
+        for ny, Hxy in Hx.items():
+            for nz, Hxyz in Hxy.items():
+                if nx == 0 and ny == 0:
+                    continue
+                elif abs(nx) <= 2 and abs(ny) <= 2:
+                    platform[kwant.builder.HoppingKind((nx, ny), lattice, lattice)] = Hxyz
+    return platform
 
-def etching(specimen, shape, dim):
+def etching(specimen, model, shape, center):
     '''
     Modify a specimen by etching some sites out according to the shape given
     Arguments:
@@ -32,7 +46,9 @@ def etching(specimen, shape, dim):
     Output:
         (kwant)
     '''
-    return
+    lattice = kwant.lattice.Monatomic(model.structure.lattice.matrix[:2, :2])
+    del specimen[lattice.shape(shape, center)]
+    return specimen
 
 def create_specimen(model, shape, center, dim, etchings):
     '''
